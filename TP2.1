@@ -1,0 +1,56 @@
+-- TABLA DE CAMPANAS
+CREATE TABLE "Campana" (
+    "id_campana" SERIAL PRIMARY KEY,
+    "nombre_campana" VARCHAR(100) UNIQUE NOT NULL,
+    "presupuesto" NUMERIC(10,2) NOT NULL,
+    "fecha_inicio" DATE NOT NULL
+);
+
+-- TABLA DE PLATAFORMAS
+CREATE TABLE "Plataformas" (
+    "id_plataforma" SERIAL PRIMARY KEY,
+    "nombre_plataforma" VARCHAR(50) NOT NULL,
+    "url_plataforma" VARCHAR(255)
+);
+
+-- TABLA DE REGISTROS DE CONVERSIONES
+CREATE TABLE "Registros de Conversiones" (
+    "id_conversion" SERIAL PRIMARY KEY,
+    "tipo_conversion" VARCHAR(50) NOT NULL,
+    "valor" NUMERIC(10,2) NOT NULL,
+    "fecha_conversion" TIMESTAMP NOT NULL,
+    "id_campana" INT NOT NULL,
+    "id_plataforma" INT NOT NULL,
+    CONSTRAINT fk_campana FOREIGN KEY("id_campana") REFERENCES "Campana"("id_campana"),
+    CONSTRAINT fk_plataforma FOREIGN KEY("id_plataforma") REFERENCES "Plataformas"("id_plataforma")
+);
+
+
+-- INSERTAR CAMPAÑAS
+INSERT INTO "Campana" (nombre_campana, presupuesto, fecha_inicio)
+VALUES
+('Campaña de Invierno 2025', 250000.02,'2025-04-12'),
+('Campaña de Ofertas',123399,'2025-07-23');
+
+--INSERTAR PLATAFORMAS
+INSERT INTO "Plataformas" (nombre_plataforma, url_plataforma)
+VALUES
+('Google Ads','https://www.google.com/?zx=1757078975599&no_sw_cr=1'),
+(' Meta Ads','https://www.meta.ai/');
+
+--INSERTAR CONVERSIONES
+INSERT INTO "Registros de Conversiones" (tipo_conversion, valor, fecha_conversion, id_campana, id_plataforma)
+VALUES
+('venta',3459,'2024-09-23',2,1),
+('registro',5656.,'2024-09-23',1,2);
+
+--CONSULTAS
+
+SELECT c."nombre_campana" AS nombre_campana,
+       p."nombre_plataforma" AS nombre_plataforma,
+       COUNT(conv."id_conversion") AS "total Registros de Conversiones",
+       SUM(conv."valor") AS total_valor
+FROM "Registros de Conversiones" AS conv
+JOIN "Campana" AS c ON conv."id_campana" = c."id_campana"
+JOIN "Plataformas" AS p ON conv."id_plataforma" = p."id_plataforma"
+GROUP BY c."nombre_campana", p."nombre_plataforma";
