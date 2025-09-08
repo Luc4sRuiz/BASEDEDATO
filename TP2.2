@@ -1,0 +1,49 @@
+-- BORRAR TABLAS SI EXISTEN (en orden de dependencias)
+DROP TABLE IF EXISTS "Reacciones";
+DROP TABLE IF EXISTS "Publicaciones";
+DROP TABLE IF EXISTS "Usuarios";
+
+-- CREAR TABLA USUARIOS
+CREATE TABLE "Usuarios" (
+    "id_Usuarios" SERIAL PRIMARY KEY,
+    "nombre_Usuarios" VARCHAR(50) NOT NULL,
+    "fecha_registro" DATE
+);
+
+-- CREAR TABLA PUBLICACIONES
+CREATE TABLE "Publicaciones" (
+    "id_Publicacion" SERIAL PRIMARY KEY,
+    "contenido" TEXT NOT NULL,
+    "fecha_Publicacion" TIMESTAMP,
+    "id_autor" INT NOT NULL,
+    FOREIGN KEY ("id_autor") REFERENCES "Usuarios"("id_Usuarios")
+);
+
+-- CREAR TABLA REACCIONES
+CREATE TABLE "Reacciones" (
+    "id_Reaccion" SERIAL PRIMARY KEY,
+    "tipo_Reaccion" VARCHAR(20) NOT NULL,
+    "fecha_Reaccion" TIMESTAMP,
+    "id_usuario" INT NOT NULL,
+    "id_publicacion" INT NOT NULL,
+    FOREIGN KEY ("id_usuario") REFERENCES "Usuarios"("id_Usuarios"),
+    FOREIGN KEY ("id_publicacion") REFERENCES "Publicaciones"("id_Publicacion")
+);
+
+-- INSERTAR USUARIOS
+INSERT INTO "Usuarios" ("nombre_Usuarios", "fecha_registro")
+VALUES
+('lgz.wav', '2012-12-12'),
+('ruizlucg', '2012-10-12');
+
+-- INSERTAR PUBLICACIONES
+INSERT INTO "Publicaciones" ("contenido", "fecha_Publicacion", "id_autor")
+VALUES 
+('Here’s what you need to know about Ed, Edd n Eddy...', '2023-09-12 12:00:00', 2),
+('Mar del plaTraPPPP🥷', '2024-08-23 15:00:00', 1);
+
+-- INSERTAR REACCIONES
+INSERT INTO "Reacciones" ("tipo_Reaccion", "fecha_Reaccion", "id_usuario", "id_publicacion")
+VALUES
+('ME ENCANTA', '2026-12-31 10:00:00', 1, 1),
+('LIKE', '2022-07-24 14:00:00', 2, 2);
